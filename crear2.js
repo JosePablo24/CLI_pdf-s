@@ -6,14 +6,7 @@ var pdf = require('html-pdf');
 
 const init = () => {
   console.log(
-    chalk.green(
-      figlet.textSync("Node f*cking JS", {
-        font: 'standard'
-        // horizontalLayout: "default",
-        // verticalLayout: "default"
-      })
-    )
-  );
+    chalk.green(figlet.textSync("Node f*cking JS", {font: 'standard'})));
 };
 
 const askQuestions = () => {
@@ -23,15 +16,29 @@ const askQuestions = () => {
       type: "input",
       message: "cual es el nombre del archivo?"
     },
-    // {
-    //     type: "list",
-    //     name: ",
-    //     message: "cual es la extencion del archivo?",
-    //     choices: [".pdf", ".txt",".docx" ],
+     {
+        type: "list",
+         name: "EXTENSION",
+         message: "cual es la extencion del archivo?",
+         choices: [
+    //".pdf", ".txt",".docx" 
+              {
+                name : 'PDF',
+                type : 'checkbox',
+                message : 'PDF',
+                value : '1'
+            },
+            {
+                name : 'TXT',
+                type : 'checkbox',
+                message : 'TXT',
+                value : '2'
+            }
+              ]
     //     filter: function(val) {
     //       return val.split(".")[1];
     //     }
-    //   },
+       },
     {
       name: 'TITULO',
       type: 'input',
@@ -46,21 +53,30 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
-const createFile = (filename,titulo, informacion) => {
-        var contenido = `
-        <h1>${titulo}</h1>
-        <p>${informacion}</p>
-            `;
-    pdf.create(contenido).toFile(`./${filename}.pdf`, function(err, res) {
-        if (err){
-            console.log(err);
-        } else {
-            console.log(res);
-        }
-    });
-//   const filePath = `${process.cwd()}/${filename}.PDF`
-//   shell.touch(filePath);
-//   return filePath;
+const createFile = (filename,titulo, informacion,extension) => {
+  console.log(extension);
+  switch (extension) {
+      case '1':                
+              var contenido = `
+              <h1>${titulo}</h1>
+              <p>${informacion}</p>
+                  `;
+          pdf.create(contenido).toFile(`./${filename}.pdf`, function(err, res) {
+              if (err){
+                  console.log(err);
+              } else {
+                  console.log(res);
+              }
+          });        
+        break;
+        case '2':
+        console.log('hola seleccionaste el archivo txt');
+                
+        break;
+  
+    default:
+      break;
+  }
 };
 
 const success = filepath => {
@@ -75,10 +91,10 @@ const run = async () => {
 
   // ask questions
   const answers = await askQuestions();
-  const { FILENAME, TITULO, INFORMACION } = answers;
+  const { FILENAME, TITULO, INFORMACION,EXTENSION } = answers;
 
   // create the file
-  const filePath = createFile(FILENAME, TITULO, INFORMACION );
+  const filePath = createFile(FILENAME, TITULO, INFORMACION,EXTENSION);
 
   // show success message
   success(filePath);
