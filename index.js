@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 const shell = require("shelljs");
 var pdf = require('html-pdf');
+const fs = require('fs');
 
 const init = () => {
   console.log(
@@ -75,11 +76,38 @@ const createFile = (filename,titulo, informacion,extension) => {
           });
             break;
         case '2':
-            console.log('hola seleccionaste el archivo txt');
+            //console.log('hola seleccionaste el archivo txt');
+            var contenido = `
+              ${titulo}
+              ${informacion}`;
+            fs.writeFile(`./${filename}.txt`, contenido,function (err) {                
+                if (err) {
+                    return console.log(err);
+                }                
+                console.log("The file was saved!");
+            });
+
             break;
-        case '3':
-            console.log('hola seleccionaste el archivo HTML');
-            
+        case '3':            
+        var contenido = `
+        <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <title>${titulo}</title>
+            </head>
+            <body>
+                <h1>${informacion}</h1>
+            </body>
+            </html>`;
+            fs.writeFile(`./${filename}.html`, contenido,function (err) {                
+                if (err) {
+                    return console.log(err);
+                }                
+                console.log("The file was saved!");
+            });
             break;        
         default:
             break;
